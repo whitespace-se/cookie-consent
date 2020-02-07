@@ -1,0 +1,13 @@
+{
+	"values": {
+		"necessary": "Nödvändiga cookies för webbsidans funktion (i linje med GDPR)",
+		"other": "Cookies för att mäta besök, anpassa innehåll och annonser",
+		"ccTitle": "Vår webbplats använder cookies",
+		"ccText": "Vi använder cookies för att förbättra din upplevelse, analysera trafik och anpassa marknadsföring. Godkänn våra cookies eller finjustera under Inställningar.",
+		"ccSettingsLabel": "Inställningar",
+		"ccAcceptCookies": "Acceptera cookies",
+		"ccAcceptCookieSettings": "Spara inställningar",
+		"ccReadMoreLabel": "Läs mer om cookies",
+		"ccReadMoreURL": "om-cookies"
+	}
+}

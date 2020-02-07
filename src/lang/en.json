@@ -1,0 +1,13 @@
+{
+	"values": {
+		"necessary": "Cookies necessary for the website to function properly in line with GDPR",
+		"other": "Cookies for tracking visits, personalizing content and adverts",
+		"ccTitle": "This web site uses cookies",
+		"ccText": "We use cookies in order to enrich and personalize your experience, understand traffic and target ads. You can approve the default cookies, or fine tune them under Settings.",
+		"ccSettingsLabel": "Settings",
+		"ccAcceptCookies": "Accept cookies",
+		"ccAcceptCookieSettings": "Save settings",
+		"ccReadMoreLabel": "Read more about cookies",
+		"ccReadMoreURL": "about-cookies"
+	}
+}
