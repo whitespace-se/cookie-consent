@@ -12,7 +12,18 @@ const strings = {
 var yett;
 
 function initiate() {
+  // add general localdomain to whitelist
+  if (window.location.host !== "") {
+    whitelist.push(window.location.host);
+  }
+
+  //convert strings to regex and escape special characters
+  whitelist = whitelist.map(function(domain) {
+    return new RegExp(domain.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  });
+
   window.YETT_WHITELIST = whitelist;
+
   yett = require("yett");
 
   categories = [
@@ -69,18 +80,18 @@ function setup() {
 								id="cc__settingsButton"
 								aria-expanded="false"
 							>
-								<svg 
+								<svg
 									class="cc__icon-open"
 									aria-hidden="true"
-									xmlns="http://www.w3.org/2000/svg" 
-									width="24" 
-									height="24" 
-									viewBox="0 0 24 24" 
-									fill="none" 
-									stroke="currentColor" 
-									stroke-width="2" 
-									stroke-linecap="round" 
-									stroke-linejoin="round" 
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
 									class="feather feather-plus-circle">
 										<circle cx="12" cy="12" r="10"></circle>
 										<line x1="12" y1="8" x2="12" y2="16"></line>
@@ -90,15 +101,15 @@ function setup() {
 									hidden
 									class="cc__icon-close"
 									aria-hidden="true"
-									xmlns="http://www.w3.org/2000/svg" 
-									width="24" 
-									height="24" 
-									viewBox="0 0 24 24" 
-									fill="none" 
-									stroke="currentColor" 
-									stroke-width="2" 
-									stroke-linecap="round" 
-									stroke-linejoin="round" 
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
 									class="feather feather-minus-circle">
 										<circle cx="12" cy="12" r="10"></circle>
 										<line x1="8" y1="12" x2="16" y2="12"></line>
@@ -234,7 +245,11 @@ function fetchJSONFile(path, callback) {
 }
 
 function parentHasClassName(element, classname) {
-  return element && (element.classList && element.classList.contains(classname) || element.parentNode && parentHasClassName(element.parentNode, classname));
+  return (
+    element &&
+    ((element.classList && element.classList.contains(classname)) ||
+      (element.parentNode && parentHasClassName(element.parentNode, classname)))
+  );
 }
 
 export default {
