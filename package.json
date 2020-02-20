@@ -20,5 +20,6 @@
   },
   "dependencies": {
     "yett": "^0.1.11"
-  }
+  },
+  "browserslist": ["defaults"]
 }
