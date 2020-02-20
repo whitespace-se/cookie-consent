@@ -295,8 +295,8 @@ function parentHasClassName(element, classname) {
 export default {
   // public init function, call this with below parameters
   init: function(params) {
-    current_language = params.current_language;
-    whitelist = params.whitelist;
+    current_language = params.current_language || 'en';
+    whitelist = params.whitelist || [];
     categories = params.categories;
     base_path = params.base_path;
     initiate();
