@@ -7,7 +7,7 @@ var current_language;
 var base_path;
 const strings = {
   sv,
-  en
+  en,
 };
 var yett;
 
@@ -16,22 +16,22 @@ function initiate() {
     if (ga && ga.q) {
       const originalQ = ga.q;
       ga.q = [];
-      originalQ.forEach(args => {
+      originalQ.forEach((args) => {
         switch (args[0]) {
-          case 'create':
+          case "create":
             {
               if (!acceptedAll()) {
-                args[2] = { ...args[2], storage: 'none' };
+                args[2] = { ...args[2], storage: "none" };
               }
-              if (!acceptedAll() || !localStorage.getItem('fingerprinted')) {
+              if (!acceptedAll() || !localStorage.getItem("fingerprinted")) {
                 args[2] = { ...args[2], clientId: new Fingerprint().get() };
               }
             }
             break;
-          case 'set':
+          case "set":
             {
               switch (args[1]) {
-                case 'anonymizeIp':
+                case "anonymizeIp":
                   {
                     if (acceptedAll()) {
                       // args[0] = null;
@@ -49,7 +49,7 @@ function initiate() {
       });
 
       if (acceptedAll()) {
-        localStorage.setItem('fingerprinted', true);
+        localStorage.setItem("fingerprinted", true);
       }
     }
   }
@@ -71,13 +71,13 @@ function initiate() {
     {
       key: "necessary",
       mutable: false,
-      default: "on"
+      default: "on",
     },
     {
       key: "other",
       mutable: true,
-      default: "off"
-    }
+      default: "off",
+    },
   ];
   document.addEventListener("DOMContentLoaded", function() {
     setup();
@@ -113,7 +113,7 @@ function setup() {
 					<div role="document" tabindex="0">
 						<h2 id="ccTitle">${i18n("ccTitle")}</h2>
 						<p id="ccDesc">${i18n("ccText")} <a href='${i18n(
-    "ccReadMoreURL"
+    "ccReadMoreURL",
   )}' class='cc__more'>${i18n("ccReadMoreLabel")}</a></p>
 						<div class="cc__settingsWrapper">
 							<button
@@ -160,7 +160,7 @@ function setup() {
 							<div id="cc__settings">
 								${categories
                   .map(
-                    category => `
+                    (category) => `
 									<label class="cc__checkbox-label ${
                     category.mutable ? "" : "cc__checkbox-label--disabled"
                   }">
@@ -171,7 +171,7 @@ function setup() {
 										<span class="cc__checkbox-checkmark"></span>
 										${i18n(category.key)}
 									</label>
-								`
+								`,
                   )
                   .join("")}
 							</div>
@@ -296,7 +296,7 @@ function parentHasClassName(element, classname) {
 export default {
   // public init function, call this with below parameters
   init: function(params) {
-    current_language = params.current_language || 'en';
+    current_language = params.current_language || "en";
     whitelist = params.whitelist || [];
     categories = params.categories;
     base_path = params.base_path;
@@ -321,5 +321,5 @@ export default {
 
   isset: function() {
     return isset();
-  }
+  },
 };
