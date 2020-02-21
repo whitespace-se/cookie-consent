@@ -13,10 +13,12 @@
     "dev": "yarn dev:umd & yarn dev:node",
     "dev:umd": "parcel watch 'src/index.js' --out-file dist/cookie-consent.min.js --global CookieConsent",
     "dev:node": "parcel watch 'src/**/*' --out-dir lib --target node --no-source-maps",
-    "start": "yarn dev"
+    "start": "yarn dev",
+    "format": "prettier --write '**/*.{js,json,md,yml}'"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^1.19.1"
   },
   "dependencies": {
     "yett": "^0.1.11"
