@@ -1,7 +1,7 @@
 import "./css/cookie-consent.css";
 
-import Fingerprint from "./fingerprint";
-import i18n from "./i18n";
+import Fingerprint from "./fingerprint.min";
+import i18n from "./i18n.min";
 // import yett from "./yett.min";
 import CookieConsent from "./cookie-consent";
 
