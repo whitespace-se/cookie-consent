@@ -13,43 +13,44 @@ var yett;
 
 function initiate() {
   if (window.GoogleAnalyticsObject) {
-    const ga = window[window.GoogleAnalyticsObject];
-    const originalQ = ga.q;
-    ga.q = [];
-    originalQ.forEach(args => {
-      switch (args[0]) {
-        case 'create':
-          {
-            if (!acceptedAll()) {
-              args[2] = { ...args[2], storage: 'none' };
+    if (ga && ga.q) {
+      const originalQ = ga.q;
+      ga.q = [];
+      originalQ.forEach(args => {
+        switch (args[0]) {
+          case 'create':
+            {
+              if (!acceptedAll()) {
+                args[2] = { ...args[2], storage: 'none' };
+              }
+              if (!acceptedAll() || !localStorage.getItem('fingerprinted')) {
+                args[2] = { ...args[2], clientId: new Fingerprint().get() };
+              }
             }
-            if (!acceptedAll() || !localStorage.getItem('fingerprinted')) {
-              args[2] = { ...args[2], clientId: new Fingerprint().get() };
-            }
-          }
-          break;
-        case 'set':
-          {
-            switch (args[1]) {
-              case 'anonymizeIp':
-                {
-                  if (acceptedAll()) {
-                    // args[0] = null;
-                    args[2] = false;
+            break;
+          case 'set':
+            {
+              switch (args[1]) {
+                case 'anonymizeIp':
+                  {
+                    if (acceptedAll()) {
+                      // args[0] = null;
+                      args[2] = false;
+                    }
                   }
-                }
-                break;
+                  break;
+              }
             }
-          }
-          break;
-      }
-      if (args[0]) {
-        ga.q.push(args);
-      }
-    });
+            break;
+        }
+        if (args[0]) {
+          ga.q.push(args);
+        }
+      });
 
-    if (acceptedAll()) {
-      localStorage.setItem('fingerprinted', true);
+      if (acceptedAll()) {
+        localStorage.setItem('fingerprinted', true);
+      }
     }
   }
   // add general localdomain to whitelist
