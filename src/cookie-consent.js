@@ -239,14 +239,6 @@ function setup() {
     var category = "necessary";
     var cbs = document.querySelectorAll("#cc__settings input");
     for (var i = 0; i < cbs.length; i++) {
-      //TODO: handle multiple categories
-      //alpha version explanation:
-      //in this version we either accept cookies or not
-      //if other isnt checked, only the whitelist gets loaded
-      //so we need only act on this
-      //in future versions this will not do
-      //we will have to rework this into something
-      //a weeeee bit more versatile :-P
       if ((cbs[i].value == "other" && cbs[i].checked) || !ccActive) {
         yett.unblock();
         category = "all";
@@ -265,20 +257,6 @@ function setup() {
       }
     }
   });
-}
-
-function fetchJSONFile(path, callback) {
-  var httpRequest = new XMLHttpRequest();
-  httpRequest.onreadystatechange = function() {
-    if (httpRequest.readyState === 4) {
-      if (httpRequest.status === 200) {
-        var data = JSON.parse(httpRequest.responseText);
-        if (callback) callback(data);
-      }
-    }
-  };
-  httpRequest.open("GET", path);
-  httpRequest.send();
 }
 
 function parentHasClassName(element, classname) {
