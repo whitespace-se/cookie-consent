@@ -1,15 +1,16 @@
-import sv from "./lang/sv.json";
-import en from "./lang/en.json";
+import en from "./strings/en.json";
+import sv from "./strings/sv.json";
 
 var whitelist;
 var categories;
-var current_language;
 var base_path;
-const strings = {
-  sv,
-  en,
-};
 var yett;
+var defaultStrings = { en, sv };
+var strings;
+
+function i18n(key) {
+  return strings[key];
+}
 
 function initiate() {
   if (window.GoogleAnalyticsObject) {
@@ -95,11 +96,6 @@ function isset() {
 
 // setup component and draw it to screen
 function setup() {
-  var translation_file = base_path + "lang/" + current_language + ".json";
-  var data = strings[current_language];
-
-  i18n.translator.add(data);
-
   var el = document.createElement("div");
   el.setAttribute("id", "cookieconsent");
   el.innerHTML = `
@@ -296,10 +292,13 @@ function parentHasClassName(element, classname) {
 export default {
   // public init function, call this with below parameters
   init: function(params) {
-    current_language = params.current_language || "en";
     whitelist = params.whitelist || [];
     categories = params.categories;
     base_path = params.base_path;
+    strings = {
+      ...(defaultStrings[current_language] || defaultStrings["en"]),
+      ...((params.strings && params.strings[currentLanguage]) || {}),
+    };
     initiate();
   },
 
