@@ -299,7 +299,7 @@
   left: 25px;
 }
 .cc__checkbox-label input:checked ~ .cc__checkbox-checkmark:before {
-  content: "1";
+  content: "";
   right: 32px;
   /* color: rgba(255, 255, 255, 1); */
 }
@@ -322,7 +322,7 @@
 
 /* Add state number */
 .cc__checkbox-label .cc__checkbox-checkmark:before {
-  content: "0";
+  content: "";
   position: absolute;
   right: 7px;
   top: calc(50% + 1px);
