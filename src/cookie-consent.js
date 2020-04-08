@@ -13,7 +13,7 @@ var yett;
 
 function initiate() {
   if (window.GoogleAnalyticsObject) {
-    if (ga && ga.q) {
+    if (ga && ga.q && ga.q !== undefined) {
       const originalQ = ga.q;
       ga.q = [];
       originalQ.forEach((args) => {
