@@ -21,7 +21,6 @@
     "prettier": "^1.19.1"
   },
   "dependencies": {
-    "@prettier/plugin-php": "^0.14.0",
     "yett": "^0.1.11"
   },
   "browserslist": [
