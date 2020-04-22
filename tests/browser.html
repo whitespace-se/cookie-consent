@@ -1,25 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <script src="../dist/cookie-consent.min.js"></script>
-  <meta name="viewport" content=
-  "width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Test</title>
-  <link rel="stylesheet" href="../dist/cookie-consent.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../dist/cookie-consent.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Test</title>
+    <link rel="stylesheet" href="../dist/cookie-consent.min.css" />
 
-  <script>
-    // initiation of cookie consent box
-    CookieConsent.init({
+    <script>
+      // initiation of cookie consent box
+      CookieConsent.init({
         current_language: "sv",
-        whitelist : [
-            "google-analytics.com"
-        ]
-    });
+        whitelist: ["google-analytics.com"],
+      });
 
-    // example code to clear settings
-    // document.addEventListener("DOMContentLoaded", function() {
+      // example code to clear settings
+      // document.addEventListener("DOMContentLoaded", function() {
       //   setTimeout(function() {
       //     CookieConsent.clearSettings();
       //   }, 3000);
@@ -29,7 +26,7 @@
       // this means just necessary is allowed
       // track cookieless
       if (!CookieConsent.acceptedAll()) {
-          console.log("test");
+        console.log("test");
         window.ga =
           window.ga ||
           function() {
@@ -38,7 +35,7 @@
         ga.l += new Date();
         ga("create", "UA-41251725-9", {
           storage: "none",
-          clientId: new Fingerprint().get()
+          clientId: new Fingerprint().get(),
         });
         ga("set", "anonymizeIp", true);
         ga("send", "pageview");
@@ -71,7 +68,7 @@
           ga("create", "UA-41251725-9");
         } else {
           ga("create", "UA-41251725-9", {
-            clientId: new Fingerprint().get()
+            clientId: new Fingerprint().get(),
           });
           localStorage.setItem("fingerprinted", true);
         }
@@ -95,13 +92,14 @@
           s.parentNode.insertBefore(g, s);
         })();
       }
-  </script>
-</head>
-<body>
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
-  crossorigin="anonymous"></script>
-  <script async src=
-  "https://www.google-analytics.com/analytics.js"></script>
-</body>
+    </script>
+  </head>
+  <body>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+      crossorigin="anonymous"
+    ></script>
+    <script async src="https://www.google-analytics.com/analytics.js"></script>
+  </body>
 </html>
