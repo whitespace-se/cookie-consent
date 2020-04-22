@@ -56,12 +56,14 @@ function initiate() {
   }
   // add general localdomain to whitelist
   if (window.location.host !== "") {
-    whitelist.push(window.location.host);
+    whitelist.push(`${window.location.origin}/*`);
   }
 
   //convert strings to regex and escape special characters
   whitelist = whitelist.map(function(domain) {
-    return new RegExp(domain.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    return new RegExp(
+      `^${domain.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*")}$`,
+    );
   });
 
   window.YETT_WHITELIST = whitelist;
