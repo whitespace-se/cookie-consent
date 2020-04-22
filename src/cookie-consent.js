@@ -273,8 +273,9 @@ export default {
     whitelist = params.whitelist || [];
     categories = params.categories;
     base_path = params.base_path;
+    let currentLanguage = params.current_language || "en";
     strings = {
-      ...(defaultStrings[current_language] || defaultStrings["en"]),
+      ...(defaultStrings[currentLanguage] || defaultStrings["en"]),
       ...((params.strings && params.strings[currentLanguage]) || {}),
     };
     initiate();
