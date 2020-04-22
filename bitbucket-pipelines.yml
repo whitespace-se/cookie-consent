@@ -4,10 +4,16 @@ pipelines:
   default:
     - step:
         caches:
-          - node
+          - node-modules
+          - yarn
         script:
-          - npm run format
+          - yarn
+          - yarn run format
           - git add -A
           - git diff-index --quiet HEAD || git commit -m"🎨 Auto-fix code
             formatting [skip ci]"
           - git push
+definitions:
+  caches:
+    node-modules: ./node_modules
+    yarn: /usr/local/share/.cache/yarn
