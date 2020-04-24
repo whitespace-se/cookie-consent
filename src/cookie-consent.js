@@ -3,7 +3,6 @@ import sv from "./strings/sv.json";
 
 var whitelist;
 var categories;
-var base_path;
 var reset_element;
 var yett;
 var defaultStrings = { en, sv };
@@ -305,7 +304,6 @@ export default {
   init: function(params) {
     whitelist = params.whitelist || [];
     categories = params.categories;
-    base_path = params.base_path;
     reset_element =
       params.reset_element || ".js-whitespace-cookie-consent-reset";
     let currentLanguage = params.current_language || "en";
@@ -316,12 +314,7 @@ export default {
     initiate();
   },
 
-  acceptedAll: function() {
-    return acceptedAll();
-  },
-
-  isset: function() {
-    return isset();
-  },
   clearSettings,
+  acceptedAll,
+  isset,
 };
