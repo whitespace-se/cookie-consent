@@ -4,9 +4,11 @@ import sv from "./strings/sv.json";
 var whitelist;
 var categories;
 var base_path;
+var reset_element;
 var yett;
 var defaultStrings = { en, sv };
 var strings;
+var wasSetUp = false;
 
 function i18n(key) {
   return strings[key];
@@ -84,6 +86,23 @@ function initiate() {
   ];
   document.addEventListener("DOMContentLoaded", function() {
     setup();
+    if (!wasSetUp) {
+      if (reset_element) {
+        console.log(reset_element);
+
+        let el = document.querySelector(reset_element);
+        console.log(el);
+
+        if (el) {
+          el.addEventListener("click", (event) => {
+            event.preventDefault();
+            console.log("click");
+            clearSettings();
+          });
+        }
+      }
+    }
+    wasSetUp = true;
   });
 }
 
@@ -269,30 +288,32 @@ function parentHasClassName(element, classname) {
   );
 }
 
+// clears all settings and pops up the cookie selector
+function clearSettings() {
+  localStorage.removeItem("category");
+  localStorage.removeItem("fingerprinted");
+  var cc = document.querySelector("#cookieconsent");
+  if (cc != null) {
+    cc.classList.remove("cc--hidden");
+  } else {
+    initiate();
+  }
+}
+
 export default {
   // public init function, call this with below parameters
   init: function(params) {
     whitelist = params.whitelist || [];
     categories = params.categories;
     base_path = params.base_path;
+    reset_element =
+      params.reset_element || ".js-whitespace-cookie-consent-reset";
     let currentLanguage = params.current_language || "en";
     strings = {
       ...(defaultStrings[currentLanguage] || defaultStrings["en"]),
       ...((params.strings && params.strings[currentLanguage]) || {}),
     };
     initiate();
-  },
-
-  // clears all settings and pops up the cookie selector
-  clearSettings: function() {
-    localStorage.removeItem("category");
-    localStorage.removeItem("fingerprinted");
-    var cc = document.querySelector("#cookieconsent");
-    if (cc != null) {
-      cc.classList.remove("cc--hidden");
-    } else {
-      initiate();
-    }
   },
 
   acceptedAll: function() {
@@ -302,4 +323,5 @@ export default {
   isset: function() {
     return isset();
   },
+  clearSettings,
 };
