@@ -25,76 +25,79 @@
       // all has not been accepted, since we only support 2 categories
       // this means just necessary is allowed
       // track cookieless
-      if (!CookieConsent.acceptedAll()) {
-        console.log("test");
-        window.ga =
-          window.ga ||
-          function() {
-            (ga.q = ga.q || []).push(arguments);
-          };
-        ga.l += new Date();
-        ga("create", "UA-41251725-9", {
-          storage: "none",
-          clientId: new Fingerprint().get(),
-        });
-        ga("set", "anonymizeIp", true);
-        ga("send", "pageview");
-        var _paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(["disableCookies"]);
-        _paq.push(["trackPageView"]);
-        _paq.push(["enableLinkTracking"]);
-        (function() {
-          var u = "//whitespace.analys.co/";
-          _paq.push(["setTrackerUrl", u + "matomo.php"]);
-          _paq.push(["setSiteId", "3"]);
-          var d = document,
-            g = d.createElement("script"),
-            s = d.getElementsByTagName("script")[0];
-          g.type = "text/javascript";
-          g.async = true;
-          g.defer = true;
-          g.src = u + "matomo.js";
-          s.parentNode.insertBefore(g, s);
-        })();
-      } else {
-        window.ga =
-          window.ga ||
-          function() {
-            (ga.q = ga.q || []).push(arguments);
-          };
-        ga.l += new Date();
-        if (localStorage.getItem("fingerprinted")) {
-          ga("create", "UA-41251725-9");
-        } else {
-          ga("create", "UA-41251725-9", {
-            clientId: new Fingerprint().get(),
-          });
-          localStorage.setItem("fingerprinted", true);
-        }
-        ga("send", "pageview");
+      // if (!CookieConsent.acceptedAll()) {
+      //   console.log("test");
+      //   window.ga =
+      //     window.ga ||
+      //     function() {
+      //       (ga.q = ga.q || []).push(arguments);
+      //     };
+      //   ga.l += new Date();
+      //   ga("create", "UA-41251725-9", {
+      //     storage: "none",
+      //     clientId: new Fingerprint().get(),
+      //   });
+      //   ga("set", "anonymizeIp", true);
+      //   ga("send", "pageview");
+      //   var _paq = window._paq || [];
+      //   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      //   _paq.push(["disableCookies"]);
+      //   _paq.push(["trackPageView"]);
+      //   _paq.push(["enableLinkTracking"]);
+      //   (function() {
+      //     var u = "//whitespace.analys.co/";
+      //     _paq.push(["setTrackerUrl", u + "matomo.php"]);
+      //     _paq.push(["setSiteId", "3"]);
+      //     var d = document,
+      //       g = d.createElement("script"),
+      //       s = d.getElementsByTagName("script")[0];
+      //     g.type = "text/javascript";
+      //     g.async = true;
+      //     g.defer = true;
+      //     g.src = u + "matomo.js";
+      //     s.parentNode.insertBefore(g, s);
+      //   })();
+      // } else {
+      //   window.ga =
+      //     window.ga ||
+      //     function() {
+      //       (ga.q = ga.q || []).push(arguments);
+      //     };
+      //   ga.l += new Date();
+      //   if (localStorage.getItem("fingerprinted")) {
+      //     ga("create", "UA-41251725-9");
+      //   } else {
+      //     ga("create", "UA-41251725-9", {
+      //       clientId: new Fingerprint().get(),
+      //     });
+      //     localStorage.setItem("fingerprinted", true);
+      //   }
+      //   ga("send", "pageview");
 
-        var _paq = window._paq || [];
-        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-        _paq.push(["trackPageView"]);
-        _paq.push(["enableLinkTracking"]);
-        (function() {
-          var u = "//whitespace.analys.co/";
-          _paq.push(["setTrackerUrl", u + "matomo.php"]);
-          _paq.push(["setSiteId", "3"]);
-          var d = document,
-            g = d.createElement("script"),
-            s = d.getElementsByTagName("script")[0];
-          g.type = "text/javascript";
-          g.async = true;
-          g.defer = true;
-          g.src = u + "matomo.js";
-          s.parentNode.insertBefore(g, s);
-        })();
-      }
+      //   var _paq = window._paq || [];
+      //   /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      //   _paq.push(["trackPageView"]);
+      //   _paq.push(["enableLinkTracking"]);
+      //   (function() {
+      //     var u = "//whitespace.analys.co/";
+      //     _paq.push(["setTrackerUrl", u + "matomo.php"]);
+      //     _paq.push(["setSiteId", "3"]);
+      //     var d = document,
+      //       g = d.createElement("script"),
+      //       s = d.getElementsByTagName("script")[0];
+      //     g.type = "text/javascript";
+      //     g.async = true;
+      //     g.defer = true;
+      //     g.src = u + "matomo.js";
+      //     s.parentNode.insertBefore(g, s);
+      //   })();
+      // }
     </script>
   </head>
   <body>
+    <button type="button" class="js-whitespace-cookie-consent-reset">
+      Reset
+    </button>
     <script
       src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
       integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
