@@ -15,7 +15,7 @@
     "dev:umd": "parcel watch 'src/index.js' --out-file dist/cookie-consent.min.js --global CookieConsent",
     "dev:node": "parcel watch 'src/**/*' --out-dir lib --target node --no-source-maps",
     "start": "yarn dev",
-    "format": "prettier --write '**/*.{js,json,html,md,yml}'",
+    "format": "prettier --write '**/*.{js,json,html,md,yml,scss,css}'",
     "test": "serve ."
   },
   "devDependencies": {
