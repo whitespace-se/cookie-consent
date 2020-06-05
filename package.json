@@ -1,7 +1,8 @@
 {
   "name": "@whitespace/cookie-consent",
   "version": "2.1.0",
-  "main": "index.js",
+  "main": "dist/cookie-consent.min.js",
+  "module": "lib/index.js",
   "author": "Whitespace <code@whitespace.se>",
   "license": "MIT",
   "scripts": {
