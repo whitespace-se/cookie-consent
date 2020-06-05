@@ -4,11 +4,11 @@ import en from "./messages/en.json";
 import sv from "./messages/sv.json";
 import CookieConsentContainer from "./components/CookieConsentContainer";
 import differenceInMonths from "date-fns/differenceInMonths";
+import * as yett from "./yett/src";
 
 let whitelist;
 let resetElementSelector;
 let dialogContainerSelector;
-let yett;
 let defaultMessages = { en, sv };
 let messages;
 let blocked = false;
@@ -136,9 +136,8 @@ function blockScripts() {
     );
   });
 
-  window.YETT_WHITELIST = whitelist;
 
-  yett = require("yett");
+  yett.init({ whitelist });
 
   blocked = true;
 }
