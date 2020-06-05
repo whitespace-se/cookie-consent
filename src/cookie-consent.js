@@ -1,67 +1,136 @@
-import en from "./strings/en.json";
-import sv from "./strings/sv.json";
+import React from "react";
+import ReactDOM from "react-dom";
+import en from "./messages/en.json";
+import sv from "./messages/sv.json";
+import CookieConsentContainer from "./components/CookieConsentContainer";
+import differenceInMonths from "date-fns/differenceInMonths";
 
-var whitelist;
-var categories;
-var reset_element;
-var yett;
-var defaultStrings = { en, sv };
-var strings;
-var wasSetUp = false;
+let whitelist;
+let resetElementSelector;
+let dialogContainerSelector;
+let yett;
+let defaultMessages = { en, sv };
+let messages;
+let blocked = false;
+let onAnswer;
+let onAllow;
+let onDeny;
+let onUnblockScripts;
+let componentProps;
+let dialogContentRef = React.createRef();
 
-function i18n(key) {
-  return strings[key];
+const LOCALSTORAGE_ITEM = "whitespace/cookie-consent";
+const ALLOW = "allow";
+const DENY = "deny";
+const DEFAULT_RESET_SELECTOR = ".js-cookie-consent-reset";
+const DEFAULT_LANG = "en";
+
+function init(options, callback) {
+  whitelist = options.whitelist || [];
+  resetElementSelector = options.resetElement || DEFAULT_RESET_SELECTOR;
+  let currentLanguage = options.currentLanguage || DEFAULT_LANG;
+  messages = {
+    ...(defaultMessages[currentLanguage] || defaultMessages[DEFAULT_LANG]),
+    ...((options.messages && options.messages[currentLanguage]) || {}),
+  };
+  onAnswer = options.onAnswer || (() => {});
+  onAllow = options.onAllow || (() => {});
+  onDeny = options.onDeny || (() => {});
+  onUnblockScripts = options.onUnblockScripts || (() => {});
+  componentProps = {
+    namespace: options.namespace || "cookie-consent",
+    position: options.position || "bottom-left",
+    ...options.componentProps,
+  };
+  let answer = getAnswer();
+  if (answer !== ALLOW) {
+    blockScripts();
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!dialogContainerSelector) {
+      dialogContainerSelector = document.createElement("div");
+      document.body.appendChild(dialogContainerSelector);
+    }
+    bindResetElement();
+    renderDialog(callback);
+  });
+  window.addEventListener("storage", (event) => {
+    if (event.key == null || event.key === LOCALSTORAGE_ITEM) {
+      onStoreUpdate();
+    }
+  });
 }
 
-function initiate() {
-  if (window.GoogleAnalyticsObject) {
-    if (ga && ga.q && ga.q !== undefined) {
-      const originalQ = ga.q;
-      ga.q = [];
-      originalQ.forEach((args) => {
-        switch (args[0]) {
-          case "create":
-            {
-              if (!acceptedAll()) {
-                args[2] = { ...args[2], storage: "none" };
-              }
-              if (!acceptedAll() || !localStorage.getItem("fingerprinted")) {
-                args[2] = { ...args[2], clientId: new Fingerprint().get() };
-              }
-            }
-            break;
-          case "set":
-            {
-              switch (args[1]) {
-                case "anonymizeIp":
-                  {
-                    if (acceptedAll()) {
-                      // args[0] = null;
-                      args[2] = false;
-                    }
-                  }
-                  break;
-              }
-            }
-            break;
-        }
-        if (args[0]) {
-          ga.q.push(args);
-        }
-      });
+const defaultStore = {
+  answer: null,
+  answeredOn: null,
+};
 
-      if (acceptedAll()) {
-        localStorage.setItem("fingerprinted", true);
-      }
+function getStore() {
+  let savedStore = localStorage.getItem(LOCALSTORAGE_ITEM);
+  if (savedStore) {
+    try {
+      return JSON.parse(savedStore) || defaultStore;
+    } catch {
+      return defaultStore;
     }
   }
-  // add general localdomain to whitelist
-  if (window.location.host !== "") {
+  return defaultStore;
+}
+
+function setStore(value, callback) {
+  localStorage.setItem(LOCALSTORAGE_ITEM, JSON.stringify(value));
+  onStoreUpdate(callback);
+}
+
+function getAnswer() {
+  const { answer, answeredOn } = getStore();
+  if (
+    answer != null &&
+    differenceInMonths(new Date(), new Date(answeredOn)) < 12
+  ) {
+    return answer;
+  }
+  return null;
+}
+
+function setAnswer(answer, callback) {
+  setStore(
+    {
+      answer,
+      answeredOn: new Date().toISOString(),
+    },
+    callback,
+  );
+  onAnswer(answer);
+  if (answer === ALLOW) {
+    onAllow();
+  } else if (answer != null) {
+    onDeny();
+  }
+}
+
+function onStoreUpdate(callback) {
+  let answer = getAnswer();
+  if (answer === ALLOW) {
+    unblockScripts();
+    onUnblockScripts();
+  }
+  renderDialog(callback);
+}
+
+function blockScripts() {
+  if (blocked) {
+    return;
+  }
+
+  // add current origin to whitelist
+  if (window.location.origin) {
     whitelist.push(`${window.location.origin}/*`);
   }
 
   //convert strings to regex and escape special characters
-  whitelist = whitelist.map(function(domain) {
+  whitelist = whitelist.map(function (domain) {
     return new RegExp(
       `^${domain.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*")}$`,
     );
@@ -71,250 +140,75 @@ function initiate() {
 
   yett = require("yett");
 
-  categories = [
-    {
-      key: "necessary",
-      mutable: false,
-      default: "on",
-    },
-    {
-      key: "other",
-      mutable: true,
-      default: "off",
-    },
-  ];
-  document.addEventListener("DOMContentLoaded", function() {
-    setup();
-    if (!wasSetUp) {
-      if (reset_element) {
-        console.log(reset_element);
-
-        let el = document.querySelector(reset_element);
-        console.log(el);
-
-        if (el) {
-          el.addEventListener("click", (event) => {
-            event.preventDefault();
-            console.log("click");
-            clearSettings();
-          });
-        }
-      }
-    }
-    wasSetUp = true;
-  });
+  blocked = true;
 }
 
-// has user accepted all cookies? (rather, more than necessary)
-function acceptedAll() {
-  return localStorage.getItem("category") == "all";
-}
-
-function isset() {
-  return localStorage.getItem("category") != null;
-}
-
-// setup component and draw it to screen
-function setup() {
-  var el = document.createElement("div");
-  el.setAttribute("id", "cookieconsent");
-  el.innerHTML = `
-				<div
-					role="dialog"
-					aria-live="polite"
-					aria-labelledby="ccTitle"
-					aria-describedby="ccDesc"
-					class="cc cc--bl cc--bs"
-				>
-					<div role="document" tabindex="0">
-						<h2 id="ccTitle">${i18n("ccTitle")}</h2>
-						<p id="ccDesc">${i18n("ccText")} <a href='${i18n(
-    "ccReadMoreURL",
-  )}' class='cc__more'>${i18n("ccReadMoreLabel")}</a></p>
-						<div class="cc__settingsWrapper">
-							<button
-								class="cc__settingsButton"
-								id="cc__settingsButton"
-								aria-expanded="false"
-							>
-								<svg
-									class="cc__icon-open"
-									aria-hidden="true"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									class="feather feather-plus-circle">
-										<circle cx="12" cy="12" r="10"></circle>
-										<line x1="12" y1="8" x2="12" y2="16"></line>
-										<line x1="8" y1="12" x2="16" y2="12"></line>
-								</svg>
-								<svg
-									hidden
-									class="cc__icon-close"
-									aria-hidden="true"
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									class="feather feather-minus-circle">
-										<circle cx="12" cy="12" r="10"></circle>
-										<line x1="8" y1="12" x2="16" y2="12"></line>
-								</svg>
-								${i18n("ccSettingsLabel")}
-							</button>
-							<div id="cc__settings">
-								${categories
-                  .map(
-                    (category) => `
-									<label class="cc__checkbox-label ${
-                    category.mutable ? "" : "cc__checkbox-label--disabled"
-                  }">
-										<input type="checkbox" value="${category.key}" autocomplete="off"
-												${category.default === "on" ? "checked" : ""}
-												${!category.mutable ? "disabled" : ""}
-										/>
-										<span class="cc__checkbox-checkmark"></span>
-										${i18n(category.key)}
-									</label>
-								`,
-                  )
-                  .join("")}
-							</div>
-						</div>
-						<button class="cc__acceptButton" id="cc__acceptButton">
-							<svg
-								aria-hidden="true"
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								stroke="currentColor"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="4"
-								class="feather feather-check"
-								viewBox="0 0 24 24"
-							>
-								<defs />
-								<path d="M20 6L9 17l-5-5" />
-							</svg>
-							<span>${i18n("ccAcceptCookies")}</span>
-						</button>
-					</div>
-				</div>
-			`;
-  document.body.appendChild(el);
-
-  // if all categories has been accepted, unblock yett
-  if (acceptedAll()) {
-    yett.unblock();
+function unblockScripts() {
+  if (!blocked) {
+    return;
   }
-
-  // if category has been set,
-  // dont do anything, just hide.
-  if (isset()) {
-    el.classList.add("cc--hidden");
-    // return false;
-  }
-
-  var ccActive = false;
-  // Show/hide settings panel
-  var ccAccept = document.querySelector("#cc__acceptButton");
-  var ccAcceptSpan = ccAccept.querySelector("span");
-  var ccSettingsWrapper = document.querySelector(".cc__settingsWrapper");
-  var ccSettingsButton = document.querySelector("#cc__settingsButton");
-  var ccOpenIcon = document.querySelector(".cc__icon-open");
-  var ccCloseIcon = document.querySelector(".cc__icon-close");
-  var ccSettingsAlt = document.querySelector("#cc__settings");
-  ccSettingsButton.addEventListener("click", function() {
-    if (ccSettingsAlt.classList.contains("cc-active")) {
-      this.setAttribute("aria-expanded", "false");
-      ccSettingsAlt.classList.remove("cc-active");
-      ccSettingsWrapper.classList.remove("cc__settingsWrapper--active");
-      ccAcceptSpan.innerHTML = i18n("ccAcceptCookies");
-      ccOpenIcon.removeAttribute("hidden");
-      ccCloseIcon.setAttribute("hidden", "hidden");
-    } else {
-      ccSettingsAlt.classList.add("cc-active");
-      ccSettingsWrapper.classList.add("cc__settingsWrapper--active");
-      this.setAttribute("aria-expanded", "true");
-      ccAcceptSpan.innerHTML = i18n("ccAcceptCookieSettings");
-      ccOpenIcon.setAttribute("hidden", "hidden");
-      ccCloseIcon.removeAttribute("hidden");
-    }
-    ccActive = true;
-  });
-
-  // Accept cookies
-  ccAccept.addEventListener("click", function(e) {
-    var category = "necessary";
-    var cbs = document.querySelectorAll("#cc__settings input");
-    for (var i = 0; i < cbs.length; i++) {
-      if ((cbs[i].value == "other" && cbs[i].checked) || !ccActive) {
-        yett.unblock();
-        category = "all";
-      }
-    }
-    localStorage.setItem("category", category);
-    el.classList.add("cc--hidden");
-    e.preventDefault();
-  });
-
-  el.addEventListener("click", function(e) {
-    var target = e.target || e.currentTarget;
-    if (parentHasClassName(target, "cc__settingsWrapper") !== true) {
-      if (ccSettingsAlt.classList.contains("cc-active")) {
-        ccSettingsButton.click();
-      }
-    }
-  });
+  yett.unblock();
+  blocked = false;
 }
 
-function parentHasClassName(element, classname) {
-  return (
-    element &&
-    ((element.classList && element.classList.contains(classname)) ||
-      (element.parentNode && parentHasClassName(element.parentNode, classname)))
+function i18n(key) {
+  return messages[key];
+}
+
+function getElement(selectorOrElement) {
+  if (typeof selectorOrElement === "string") {
+    return document.querySelector(selectorOrElement);
+  }
+  return selectorOrElement;
+}
+
+function getDialogContainer() {
+  return getElement(dialogContainerSelector);
+}
+
+function getResetElement() {
+  return getElement(resetElementSelector);
+}
+
+function renderDialog(callback) {
+  ReactDOM.render(
+    <CookieConsentContainer
+      i18n={i18n}
+      answer={getAnswer()}
+      setAnswer={setAnswer}
+      constants={{ ALLOW, DENY }}
+      contentRef={dialogContentRef}
+      {...componentProps}
+    />,
+    getDialogContainer(),
+    callback,
   );
 }
 
-// clears all settings and pops up the cookie selector
-function clearSettings() {
-  localStorage.removeItem("category");
-  localStorage.removeItem("fingerprinted");
-  var cc = document.querySelector("#cookieconsent");
-  if (cc != null) {
-    cc.classList.remove("cc--hidden");
-  } else {
-    initiate();
+function bindResetElement() {
+  let element = getResetElement();
+  if (element) {
+    element.addEventListener("click", () => {
+      reset();
+    });
   }
 }
 
-export default {
-  // public init function, call this with below parameters
-  init: function(params) {
-    whitelist = params.whitelist || [];
-    categories = params.categories;
-    reset_element =
-      params.reset_element || ".js-whitespace-cookie-consent-reset";
-    let currentLanguage = params.current_language || "en";
-    strings = {
-      ...(defaultStrings[currentLanguage] || defaultStrings["en"]),
-      ...((params.strings && params.strings[currentLanguage]) || {}),
-    };
-    initiate();
-  },
+function reset() {
+  setStore(null, () => {
+    if (dialogContentRef.current) {
+      dialogContentRef.current.focus();
+    }
+  });
+}
 
-  clearSettings,
-  acceptedAll,
-  isset,
+export default {
+  init,
+  reset,
+  setAnswer,
+  ALLOW,
+  DENY,
+  LOCALSTORAGE_ITEM,
 };
+
+export { init, reset, setAnswer, ALLOW, DENY, LOCALSTORAGE_ITEM };

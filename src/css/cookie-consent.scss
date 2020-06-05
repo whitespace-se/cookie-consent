@@ -1,0 +1,132 @@
+$cookie-consent-distance: 1rem !default;
+$cookie-consent-max-width: 28rem !default;
+$cookie-consent-breakpoint: (
+  $cookie-consent-max-width + $cookie-consent-distance * 2
+) !default;
+
+:root {
+  --cookie-consent-bg: black;
+  --cookie-consent-text: white;
+  --cookie-consent-font-size: inherit;
+  --cookie-consent-distance: #{$cookie-consent-distance};
+  --cookie-consent-border-radius: 0.25rem;
+  --cookie-consent-max-width: #{$cookie-consent-max-width};
+  --cookie-consent-allow-button-bg: green;
+  --cookie-consent-allow-button-text: white;
+  --cookie-consent-deny-button-bg: dimgray;
+  --cookie-consent-deny-button-text: white;
+  --cookie-consent-z-index: 2;
+  --cookie-consent-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.02),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.028), 0 12.5px 10px rgba(0, 0, 0, 0.035),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.042), 0 41.8px 33.4px rgba(0, 0, 0, 0.05),
+    0 100px 80px rgba(0, 0, 0, 0.07);
+}
+
+.cookie-consent {
+  background: var(--cookie-consent-bg);
+  color: var(--cookie-consent-text);
+  display: flex;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  font-size: var(--cookie-consent-font-size);
+  padding: var(--cookie-consent-distance);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--cookie-consent-z-index);
+  box-sizing: border-box;
+}
+
+.cookie-consent__button-group {
+  margin-top: var(--cookie-consent-distance);
+}
+
+.cookie-consent__button {
+  padding: calc(var(--cookie-consent-distance) / 2)
+    var(--cookie-consent-distance);
+  border: 0;
+  border-radius: var(--cookie-consent-border-radius);
+  margin-right: var(--cookie-consent-distance);
+}
+
+.cookie-consent__button--deny {
+  background: var(--cookie-consent-deny-button-bg);
+  color: var(--cookie-consent-deny-button-text);
+}
+
+.cookie-consent__button--allow {
+  background: var(--cookie-consent-allow-button-bg);
+  color: var(--cookie-consent-allow-button-text);
+}
+
+.cookie-consent__title {
+  font-size: var(--cookie-consent-font-size);
+  font-weight: var(--font-weight-semi-bold);
+}
+
+.cookie-consent__description {
+  margin: 0;
+}
+
+.cookie-consent__more {
+  color: inherit;
+
+  &:hover,
+  &:focus {
+    color: inherit;
+  }
+}
+
+@media screen and (min-width: $cookie-consent-breakpoint) {
+  .cookie-consent--top,
+  .cookie-consent--bottom {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .cookie-consent--top-left {
+    left: var(--cookie-consent-distance);
+    top: var(--cookie-consent-distance);
+    max-width: var(--cookie-consent-max-width);
+    border-radius: var(--cookie-consent-border-radius);
+  }
+
+  .cookie-consent--top-right {
+    right: var(--cookie-consent-distance);
+    top: var(--cookie-consent-distance);
+    left: auto;
+    max-width: var(--cookie-consent-max-width);
+    border-radius: var(--cookie-consent-border-radius);
+  }
+
+  .cookie-consent--bottom-left {
+    top: auto;
+    bottom: var(--cookie-consent-distance);
+    left: var(--cookie-consent-distance);
+    max-width: var(--cookie-consent-max-width);
+    border-radius: var(--cookie-consent-border-radius);
+  }
+
+  .cookie-consent--bottom-right {
+    top: auto;
+    right: var(--cookie-consent-distance);
+    bottom: var(--cookie-consent-distance);
+    left: auto;
+    max-width: var(--cookie-consent-max-width);
+    border-radius: var(--cookie-consent-border-radius);
+  }
+
+  .cookie-consent--bottom {
+    top: auto;
+    bottom: 0;
+    left: 0;
+  }
+
+  .cookie-consent--top-left,
+  .cookie-consent--top-right,
+  .cookie-consent--bottom-left,
+  .cookie-consent--bottom-right {
+    box-shadow: var(--cookie-consent-shadow);
+  }
+}

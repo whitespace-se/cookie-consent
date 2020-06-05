@@ -24,9 +24,14 @@
     "eslint-plugin-react": "^7.20.0",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.5",
+    "sass": "^1.26.8",
     "serve": "^11.3.2"
   },
   "dependencies": {
+    "classnames": "^2.2.6",
+    "date-fns": "^2.14.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "yett": "^0.1.13"
   },
   "browserslist": [

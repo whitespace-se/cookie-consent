@@ -1,8 +1,4 @@
-import "./css/cookie-consent.css";
+import "./css/cookie-consent.scss";
 
-import Fingerprint from "./fingerprint.min";
-import CookieConsent from "./cookie-consent";
-
-window.Fingerprint = Fingerprint;
-
-module.exports = CookieConsent;
+export * from "./cookie-consent";
+export { default } from "./cookie-consent";
