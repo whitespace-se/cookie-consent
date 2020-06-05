@@ -202,13 +202,4 @@ function reset() {
   });
 }
 
-export default {
-  init,
-  reset,
-  setAnswer,
-  ALLOW,
-  DENY,
-  LOCALSTORAGE_ITEM,
-};
-
 export { init, reset, setAnswer, ALLOW, DENY, LOCALSTORAGE_ITEM };
