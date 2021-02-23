@@ -1,6 +1,6 @@
 {
   "name": "@whitespace/cookie-consent",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "source": "src/index.js",
   "main": "dist/cookie-consent.js",
   "module": "dist/cookie-consent.module.js",
