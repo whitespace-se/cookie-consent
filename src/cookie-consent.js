@@ -136,7 +136,6 @@ function blockScripts() {
     );
   });
 
-
   yett.init({ whitelist });
 
   blocked = true;
@@ -201,4 +200,4 @@ function reset() {
   });
 }
 
-export { init, reset, setAnswer, ALLOW, DENY, LOCALSTORAGE_ITEM };
+export { init, reset, getAnswer, setAnswer, ALLOW, DENY, LOCALSTORAGE_ITEM };
