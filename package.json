@@ -6,7 +6,7 @@
   "module": "dist/cookie-consent.module.js",
   "unpkg": "dist/cookie-consent.umd.js",
   "author": "Whitespace <code@whitespace.se>",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "clean": "rm -rf dist && rm -rf lib",
     "build": "microbundle --jsx=React.createElement --name=CookieConsent --css-modules=false --external=react,react-dom,classnames --globals react=React,react-dom=ReactDOM,classnames=classNames",
